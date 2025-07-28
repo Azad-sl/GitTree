@@ -1,392 +1,64 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub 项目目录树生成器</title>
+    <title>GitTree - GitHub项目目录树生成</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root {
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            --bg-color: #f7f7f7;
-            --body-bg: #ffffff;
-            --text-color-primary: #1d1d1f;
-            --text-color-secondary: #6e6e73;
-            --border-color: #d2d2d7;
-            --primary-color: #007aff;
-            --primary-color-hover: #0071e3;
-            --danger-color: #d73a49;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--bg-color);
-            color: var(--text-color-primary);
-            margin: 0;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--body-bg);
-            border: 1px solid #e1e1e1;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-            padding: 2.5rem;
-            transform: translateY(0);
-            transition: transform 0.3s ease;
-        }
-
-        h1 {
+        :root{--font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;--font-mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;--bg-color:#f3f3f8;--body-bg:#fff;--text-primary:#1d1d1f;--text-secondary:#6e6e73;--border-color:#d2d2d7;--primary-color:#007aff;--primary-hover:#0071e3;--control-bg:#f0f0f0;--control-bg-hover:#e0e0e0;--shadow-color:rgba(0,0,0,.05);--danger-color:#d73a49}html[data-theme=dark]{--bg-color:#1c1c1e;--body-bg:#2c2c2e;--text-primary:#f5f5f7;--text-secondary:#8e8e93;--border-color:#444446;--primary-color:#0a84ff;--primary-hover:#0a84ff;--control-bg:#3a3a3c;--control-bg-hover:#545456;--shadow-color:rgba(0,0,0,.2);--danger-color:#ff453a}body{font-family:var(--font-sans);background-color:var(--bg-color);color:var(--text-primary);margin:0;padding:2rem;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;transition:background-color .3s ease,color .3s ease;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.container{position:relative;width:100%;max-width:800px;background-color:var(--body-bg);border:1px solid var(--border-color);border-radius:18px;box-shadow:0 12px 40px var(--shadow-color);padding:2rem 2.5rem 2.5rem;transition:background-color .3s ease,border-color .3s ease}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        h1{text-align:center;font-size:2rem;font-weight:600;margin-top:0;margin-bottom:.5rem}.subtitle{text-align:center;font-size:1rem;color:var(--text-secondary);margin-bottom:2rem}pre#result{font-family:var(--font-mono);font-size:.9rem;color:var(--text-primary);white-space:pre;padding:1.5rem;margin:0;max-height:50vh;overflow:auto;line-height:1.6;background-color:var(--body-bg);transition:background-color .3s ease,color .3s ease}pre#result.error{color:var(--danger-color);font-family:var(--font-sans);white-space:normal}
+        #theme-toggle{position:absolute;top:1.5rem;right:1.5rem;background:0 0;border:none;cursor:pointer;padding:5px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-secondary)}#theme-toggle:hover{color:var(--text-primary);background-color:var(--control-bg)}#theme-toggle svg{width:22px;height:22px}.input-wrapper{display:flex;gap:1rem;margin-bottom:1rem}input[type=text],input[type=number]{padding:.8rem 1rem;font-size:1rem;border:1px solid var(--border-color);border-radius:10px;font-family:var(--font-sans);background-color:var(--body-bg);color:var(--text-primary);transition:border-color .2s,box-shadow .2s,background-color .3s ease}input[type=text]{flex-grow:1}input[type=text]:focus,input[type=number]:focus{border-color:var(--primary-color);box-shadow:0 0 0 4px var(--primary-color)33;outline:0}button#generateBtn{padding:.8rem 1.5rem;font-size:1rem;font-weight:600;color:#fff;background-color:var(--primary-color);border:none;border-radius:10px;cursor:pointer;transition:background-color .2s,transform .1s;display:flex;align-items:center;justify-content:center;white-space:nowrap}button#generateBtn:hover{background-color:var(--primary-hover)}button#generateBtn:active{transform:scale(.98)}button#generateBtn:disabled{background-color:#a0a0a0;cursor:not-allowed;opacity:.8}.spinner{border:2px solid #fff3;border-radius:50%;border-top-color:#fff;width:16px;height:16px;animation:spin 1s linear infinite;margin-right:.5rem}.advanced-options{margin-top:1rem}.advanced-options summary{cursor:pointer;color:var(--text-secondary);font-size:.9rem;font-weight:500;list-style-position:expert;display:inline-block;padding:.25rem .5rem;border-radius:6px}.advanced-options summary:hover{background-color:var(--control-bg)}.advanced-options-grid{display:grid;grid-template-columns:1fr auto;gap:1rem;margin-top:.75rem;align-items:center}.advanced-options label{color:var(--text-secondary);font-size:.9rem}input#depthInput{width:70px;text-align:center}input#excludeInput{width:100%;box-sizing:border-box}.result-wrapper{margin-top:2rem;border:1px solid var(--border-color);border-radius:12px;overflow:hidden;transition:border-color .3s ease}.result-header{display:flex;justify-content:space-between;align-items:center;padding:.5rem .75rem;background-color:var(--control-bg);border-bottom:1px solid var(--border-color);transition:background-color .3s ease,border-color .3s ease}.header-group{display:flex;align-items:center;gap:.5rem}.header-group button{background:0 0;border:none;padding:.3rem .5rem;cursor:pointer;color:var(--text-secondary);font-family:var(--font-sans);font-size:.8rem;display:flex;align-items:center;gap:.3rem;border-radius:6px;transition:background-color .2s,color .2s}.header-group button:hover{background-color:var(--control-bg-hover);color:var(--text-primary)}.header-group button svg{width:18px;height:18px;stroke-width:1.8}.view-modes button.active{color:var(--primary-color);background-color:var(--primary-color)26}.header-group button:disabled{opacity:.5;cursor:not-allowed}#copyBtn .copy-icon{width:1em;height:1em;stroke-width:2;vertical-align:middle}
+        #image-card-container{position:absolute;left:-9999px;top:-9999px;padding:4rem;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}.macos-window{width:800px;background-color:#2e2e2e;border-radius:10px;box-shadow:0 25px 50px -12px rgba(0,0,0,.4);padding-bottom:20px}.title-bar{height:48px;display:flex;align-items:center;justify-content:center;position:relative;padding:0 15px;border-bottom:1px solid #444}.traffic-lights{position:absolute;left:15px;display:flex;gap:8px}.light{width:12px;height:12px;border-radius:50%}.light.red{background-color:#ff5f56}.light.yellow{background-color:#ffbd2e}.light.green{background-color:#27c93f}.title-text{color:#b0b0b0;font-family:var(--font-sans);font-size:14px;font-weight:500}.card-content{font-family:var(--font-mono);font-size:14px;color:#e0e0e0;white-space:pre;padding:20px;max-height:80vh;overflow:auto;line-height:1.6}
+        footer {
             text-align: center;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 0.5rem;
+            margin-top: 3rem;
+            padding-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
         }
-
-        .subtitle {
-            text-align: center;
-            font-size: 1rem;
-            color: var(--text-color-secondary);
-            margin-bottom: 2.5rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 1rem;
-        }
-
-        input[type="text"] {
-            flex-grow: 1;
-            padding: 0.8rem 1rem;
-            font-size: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-family: var(--font-sans);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
-            outline: none;
-        }
-
-        button#generateBtn {
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #fff;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
+        footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            white-space: nowrap;
+            gap: 0.3rem;
         }
-
-        button#generateBtn:hover {
-            background-color: var(--primary-color-hover);
+        footer a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
         }
-
-        button#generateBtn:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-
-        .spinner {
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 2px solid #fff;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .result-wrapper {
-            margin-top: 2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: flex-end;
-            padding: 0.5rem 0.75rem;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        button#copyBtn {
-            background: none;
-            border: none;
-            padding: 0.25rem 0.5rem;
-            cursor: pointer;
-            color: var(--text-color-secondary);
-            font-family: var(--font-sans);
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem; 
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-        button#copyBtn:hover {
-            background-color: #e0e0e0;
-        }
-        button#copyBtn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .copy-icon {
+        footer .github-icon {
             width: 1em;
             height: 1em;
-            stroke-width: 2;
-            vertical-align: middle;
+            fill: currentColor;
         }
-
-        pre#result {
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            color: var(--text-color-primary);
-            white-space: pre; /* Use pre for better tree structure alignment */
-            padding: 1.5rem;
-            margin: 0;
-            max-height: 50vh;
-            overflow-y: auto;
-            line-height: 1.6;
-            background-color: #fafafa;
+        footer p {
+            margin: 0.5rem 0 0;
         }
-        pre#result.error {
-            color: var(--danger-color);
-            font-family: var(--font-sans);
-            white-space: normal;
-        }
-
-        /* Custom scrollbar for a cleaner look */
-        pre#result::-webkit-scrollbar { width: 12px; }
-        pre#result::-webkit-scrollbar-track { background: #f1f1f1; }
-        pre#result::-webkit-scrollbar-thumb { background: #ccc; border-radius: 6px; border: 3px solid #f1f1f1; }
-        pre#result::-webkit-scrollbar-thumb:hover { background: #bbb; }
-
     </style>
 </head>
 <body>
-
     <main class="container">
-        <h1>Github 项目目录树</h1>
-        <p class="subtitle">输入一个公开的 GitHub 仓库链接，即刻生成优雅的目录结构。</p>
-        
-        <div class="form-group">
-            <div class="input-wrapper">
-                <input type="text" id="repoUrl" placeholder="例如: https://github.com/facebook/react" value="https://github.com/Atlas-azad/QHGPT-ja">
-                <button id="generateBtn">
-                    <span id="btn-text">生成</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="result-wrapper">
-            <div class="result-header">
-                <button id="copyBtn" title="复制到剪贴板" disabled>
-                    <svg class="copy-icon" id="copy-icon-clipboard" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    <svg class="copy-icon" id="copy-icon-check" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
-                    <span id="copy-text">复制</span>
-                </button>
-            </div>
-            <pre id="result">在这里显示生成的目录树...</pre>
-        </div>
+        <button id="theme-toggle" title="切换亮/暗色模式"><svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg id="theme-icon-moon" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><h1>GitHub 项目目录树生成</h1><p class="subtitle">输入一个公开的 GitHub 仓库链接，优雅地生成、过滤与分享。</p><div class="input-wrapper"><input type="text" id="repoUrl" placeholder="例如: https://github.com/Azad-sl/GitTree"><button id="generateBtn"><span id="btn-text">生成</span></button></div><details class="advanced-options"><summary>高级选项</summary><div class="advanced-options-grid"><label for="excludeInput">排除项 (逗号分隔, 支持 `*`):</label><label for="depthInput">最大深度:</label><input type="text" id="excludeInput" placeholder="node_modules, dist, *.log"><input type="number" id="depthInput" min="1" placeholder="∞"></div></details><div class="result-wrapper"><div class="result-header"><div class="header-group view-modes"><button id="view-all" class="active" title="完整视图"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M14 9h7m-7 6h7M4 9h1m-1 6h1"/></svg> <span>All</span></button><button id="view-folders" title="仅文件夹"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> <span>Folders</span></button></div><div class="header-group export-tools"><button id="copyMdBtn" title="复制为 Markdown" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg> <span id="copyMdText">Markdown</span></button><button id="exportBtn" title="导出为图片" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span id="exportText">导出</span></button><button id="copyBtn" title="复制到剪贴板" disabled><svg class="copy-icon" id="copy-icon-clipboard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><svg class="copy-icon" id="copy-icon-check" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg> <span id="copy-text">复制</span></button></div></div><pre id="result">在这里显示生成的目录树...</pre></div>
     </main>
+    <footer>
+        <p>
+            Open-sourced on 
+            <a href="https://github.com/Azad-sl/GitTree" target="_blank" rel="noopener noreferrer">
+                <svg class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Azad-sl / GitTree
+            </a>
+        </p>
+    </footer>
+
+    <div id="image-card-container"><div class="macos-window"><div class="title-bar"><div class="traffic-lights"><div class="light red"></div><div class="light yellow"></div><div class="light green"></div></div><div class="title-text"></div></div><pre class="card-content"></pre></div></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const repoUrlInput = document.getElementById('repoUrl');
-            const generateBtn = document.getElementById('generateBtn');
-            const resultDiv = document.getElementById('result');
-            const btnText = document.getElementById('btn-text');
-            
-            const copyBtn = document.getElementById('copyBtn');
-            const copyText = document.getElementById('copy-text');
-            const iconClipboard = document.getElementById('copy-icon-clipboard');
-            const iconCheck = document.getElementById('copy-icon-check');
-            let hasResultForCopy = false;
-
-            generateBtn.addEventListener('click', handleGeneration);
-            repoUrlInput.addEventListener('keydown', (e) => {
-                if(e.key === 'Enter') handleGeneration();
-            });
-            copyBtn.addEventListener('click', handleCopy);
-
-            async function handleGeneration() {
-                const url = repoUrlInput.value.trim();
-                if (!url) {
-                    showError("请输入 GitHub 仓库链接。");
-                    return;
-                }
-
-                const repoInfo = parseGitHubUrl(url);
-                if (!repoInfo) {
-                    showError("无效的 GitHub 仓库链接。请确保格式正确，如 https://github.com/owner/repo");
-                    return;
-                }
-
-                setLoading(true);
-                copyBtn.disabled = true;
-                hasResultForCopy = false;
-
-                try {
-                    const treeData = await fetchTreeData(repoInfo.owner, repoInfo.repo, repoInfo.branch);
-                    const treeString = buildTreeString(repoInfo.repo, treeData);
-                    showSuccess(treeString);
-                    if (treeData && treeData.length > 0) {
-                        copyBtn.disabled = false;
-                        hasResultForCopy = true;
-                    }
-                } catch (error) {
-                    showError(error.message);
-                } finally {
-                    setLoading(false);
-                }
-            }
-
-            function parseGitHubUrl(url) {
-                const regex = /https?:\/\/github\.com\/([^\/]+)\/([^\/\s]+)(?:\/tree\/([^\/\s]+))?/;
-                const match = url.match(regex);
-                if (match) {
-                    return {
-                        owner: match[1],
-                        repo: match[2].replace('.git', ''),
-                        branch: match[3] || 'main'
-                    };
-                }
-                return null;
-            }
-
-            async function fetchTreeData(owner, repo, branch) {
-                let apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
-                let response = await fetch(apiUrl);
-                
-                if (response.status === 404) {
-                    console.log(`Branch '${branch}' not found, trying 'master'...`);
-                    apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`;
-                    response = await fetch(apiUrl);
-                }
-
-                if (!response.ok) {
-                    if (response.status === 404) throw new Error(`仓库或分支未找到。请检查链接是否正确，以及仓库是否为公开。`);
-                    if (response.status === 403) throw new Error(`API 访问频率受限。请稍后再试。`);
-                    throw new Error(`获取数据失败，状态码: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                if (data.truncated) {
-                    alert("提醒：由于文件数量过多，GitHub API 返回了被截断的列表，目录树可能不完整。");
-                }
-                return data.tree;
-            }
-
-            function buildTreeString(repoName, tree) {
-                if (!tree || tree.length === 0) return "这个仓库似乎是空的。";
-
-                const root = {};
-                tree.forEach(item => {
-                    let pathParts = item.path.split('/');
-                    let currentNode = root;
-                    for (let i = 0; i < pathParts.length; i++) {
-                        let part = pathParts[i];
-                        if (!currentNode[part]) {
-                            currentNode[part] = (i === pathParts.length - 1 && item.type === 'blob') ? null : {};
-                        }
-                        currentNode = currentNode[part];
-                    }
-                });
-
-                let treeString = `${repoName}/\n`;
-                const generateLines = (node, prefix = '') => {
-                    const entries = Object.keys(node);
-                    entries.forEach((key, index) => {
-                        const isLast = index === entries.length - 1;
-                        const connector = isLast ? '└── ' : '├── ';
-                        treeString += `${prefix}${connector}${key}\n`;
-                        const childNode = node[key];
-                        if (childNode !== null) { // It's a directory
-                            const newPrefix = prefix + (isLast ? '    ' : '│   ');
-                            generateLines(childNode, newPrefix);
-                        }
-                    });
-                };
-                
-                generateLines(root);
-                return treeString.trim();
-            }
-
-            function handleCopy() {
-                if (!hasResultForCopy) return;
-
-                navigator.clipboard.writeText(resultDiv.innerText).then(() => {
-                    copyText.textContent = '已复制!';
-                    iconClipboard.style.display = 'none';
-                    iconCheck.style.display = 'inline-block';
-                    
-                    setTimeout(() => {
-                        copyText.textContent = '复制';
-                        iconClipboard.style.display = 'inline-block';
-                        iconCheck.style.display = 'none';
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                    alert('复制失败，您的浏览器可能不支持或未授予权限。请手动复制。');
-                });
-            }
-
-            function setLoading(isLoading) {
-                generateBtn.disabled = isLoading;
-                if (isLoading) {
-                    btnText.textContent = '';
-                    const spinner = document.createElement('span');
-                    spinner.className = 'spinner';
-                    generateBtn.prepend(spinner);
-                } else {
-                    btnText.textContent = '生成';
-                    const spinner = generateBtn.querySelector('.spinner');
-                    if(spinner) spinner.remove();
-                }
-            }
-
-            function showError(message) {
-                resultDiv.textContent = `❌ 错误：${message}`;
-                resultDiv.className = 'error';
-            }
-
-            function showSuccess(content) {
-                resultDiv.textContent = content;
-                resultDiv.className = '';
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => { const exportBtn = document.getElementById('exportBtn'); const exportText = document.getElementById('exportText'); let currentRepoInfo = null; exportBtn.addEventListener('click', async () => { if (!hasResultForCopy) return; exportText.textContent = '生成中...'; exportBtn.disabled = true; const cardContainer = document.getElementById('image-card-container'); const cardTitle = cardContainer.querySelector('.title-text'); const cardContent = cardContainer.querySelector('.card-content'); try { cardContent.style.maxHeight = 'none'; cardTitle.textContent = `${currentRepoInfo.owner}/${currentRepoInfo.repo}`; cardContent.textContent = resultDiv.textContent; const canvas = await html2canvas(cardContainer, { useCORS: true, backgroundColor: null }); const link = document.createElement('a'); link.download = `${currentRepoInfo.repo}-tree.png`; link.href = canvas.toDataURL('image/png'); link.click(); } catch (error) { console.error('导出图片失败:', error); alert('导出图片失败，详情请查看控制台。'); } finally { cardContent.style.maxHeight = ''; exportText.textContent = '导出'; exportBtn.disabled = false; } }); const resultDiv = document.getElementById('result'); const repoUrlInput = document.getElementById('repoUrl'); const generateBtn = document.getElementById('generateBtn'); const copyBtn = document.getElementById('copyBtn'); const copyMdBtn = document.getElementById('copyMdBtn'); const copyMdText = document.getElementById('copyMdText'); let hasResultForCopy = false; function setShareButtonsState(enabled) { hasResultForCopy = enabled;[copyBtn, exportBtn, copyMdBtn].forEach(btn => btn.disabled = !enabled); } async function handleGenerationWrapper() { setShareButtonsState(false); const url = repoUrlInput.value.trim(); if (!url) { showError("请输入 GitHub 仓库链接。"); return; } currentRepoInfo = parseGitHubUrl(url); if (!currentRepoInfo) { showError("无效的 GitHub 仓库链接。请确保格式正确。"); return; } setLoading(true); try { const rawTree = await fetchTreeData(currentRepoInfo.owner, currentRepoInfo.repo, currentRepoInfo.branch); const excludePatterns = excludeInput.value.split(',').map(p => p.trim()).filter(Boolean); const maxDepth = parseInt(depthInput.value, 10) || Infinity; const filteredTree = filterTree(rawTree, excludePatterns, currentViewMode); const treeString = buildTreeString(currentRepoInfo.repo, filteredTree, maxDepth); showSuccess(treeString); if (filteredTree.length > 0) { setShareButtonsState(true); } } catch (error) { showError(error.message); } finally { setLoading(false); } } copyMdBtn.addEventListener('click', () => { if (!hasResultForCopy) return; const markdownString = "```\n" + resultDiv.innerText + "\n```"; navigator.clipboard.writeText(markdownString).then(() => { const originalText = copyMdText.textContent; copyMdText.textContent = '已复制!'; setTimeout(() => { copyMdText.textContent = originalText; }, 2000); }).catch(err => { console.error('复制 Markdown 失败:', err); alert('复制 Markdown 失败。'); }); }); const btnText=document.getElementById("btn-text"),copyText=document.getElementById("copy-text"),iconClipboard=document.getElementById("copy-icon-clipboard"),iconCheck=document.getElementById("copy-icon-check"),excludeInput=document.getElementById("excludeInput"),depthInput=document.getElementById("depthInput"),viewAllBtn=document.getElementById("view-all"),viewFoldersBtn=document.getElementById("view-folders"),themeToggle=document.getElementById("theme-toggle"),themeIconSun=document.getElementById("theme-icon-sun"),themeIconMoon=document.getElementById("theme-icon-moon"),htmlEl=document.documentElement;let currentViewMode="all";generateBtn.addEventListener("click",handleGenerationWrapper),repoUrlInput.addEventListener("keydown",e=>{"Enter"===e.key&&handleGenerationWrapper()}),copyBtn.addEventListener("click",handleCopy),viewAllBtn.addEventListener("click",()=>setViewMode("all")),viewFoldersBtn.addEventListener("click",()=>setViewMode("folders")),themeToggle.addEventListener("click",toggleTheme);function applyTheme(e){htmlEl.setAttribute("data-theme",e),"dark"===e?(themeIconSun.style.display="none",themeIconMoon.style.display="block"):(themeIconSun.style.display="block",themeIconMoon.style.display="none")}function toggleTheme(){const e="dark"===htmlEl.getAttribute("data-theme")?"light":"dark";applyTheme(e),localStorage.setItem("theme",e)}applyTheme(localStorage.getItem("theme")||"light");function filterTree(e,t,o){return e.filter(e=>!(e=>{const o=e.split("/");return t.some(t=>t.startsWith("*.")?e.endsWith(t.substring(1)):o.includes(t))})(e.path)&&("folders"!==o||"tree"===e.type))}function buildTreeString(e,t,o){if(!t||0===t.length)return"没有可显示的项目，请检查您的过滤条件。";const n={};t.forEach(e=>{let t=e.path.split("/"),l=n;for(let r=0;r<t.length;r++){let c=t[r];l[c]||(l[c]=r===t.length-1&&"blob"===e.type?null:{}),l=l[c]}});let l=`${e}/\n`,r=(e,t="",n=1)=>{const c=Object.keys(e);c.forEach((s,a)=>{const i=a===c.length-1,d=i?"└── ":"├── ";l+=`${t}${d}${s}\n`;const p=e[s];null!==p&&n<o&&r(p,t+(i?"    ":"│   "),n+1)})};return r(n),l.trim()}function parseGitHubUrl(e){const t=/https?:\/\/github\.com\/([^\/]+)\/([^\/\s]+)/.exec(e);return t?{owner:t[1],repo:t[2].replace(".git",""),branch:"main"}:null}async function fetchTreeData(e,t,o){let n=await fetch(`https://api.github.com/repos/${e}/${t}/git/trees/${o}?recursive=1`);if(404===n.status&&(console.log("try master"),n=await fetch(`https://api.github.com/repos/${e}/${t}/git/trees/master?recursive=1`)),!n.ok){if(404===n.status)throw new Error("仓库或分支未找到");if(403===n.status)throw new Error("API访问频率受限");throw new Error(`获取���败:${n.status}`)}const l=await n.json();return l.truncated&&alert("提醒:文件列表过大,已被GitHub API截断"),l.tree}function handleCopy(){hasResultForCopy&&navigator.clipboard.writeText(resultDiv.innerText).then(()=>{copyText.textContent="已复制!",iconClipboard.style.display="none",iconCheck.style.display="inline-block",setTimeout(()=>{copyText.textContent="复制",iconClipboard.style.display="inline-block",iconCheck.style.display="none"},2e3)}).catch(e=>{console.error("复制失败:",e),alert("复制失败,您的浏览器可能不支持或未授予权限。")})}function setLoading(e){generateBtn.disabled=e,e?(btnText.textContent="",function(){const e=document.createElement("span");e.className="spinner",generateBtn.prepend(e)}()):(btnText.textContent="生成",function(){const e=generateBtn.querySelector(".spinner");e&&e.remove()}())}function showError(e){resultDiv.textContent=`❌ 错误：${e}`,resultDiv.className="error"}function showSuccess(e){resultDiv.textContent=e,resultDiv.className=""}function setViewMode(e){currentViewMode=e,viewAllBtn.classList.toggle("active","all"===e),viewFoldersBtn.classList.toggle("active","folders"===e),handleGenerationWrapper()} });
     </script>
-
 </body>
 </html>
