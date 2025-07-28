@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub 项目目录树生成器</title>
+    <style>
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            --bg-color: #f7f7f7;
+            --body-bg: #ffffff;
+            --text-color-primary: #1d1d1f;
+            --text-color-secondary: #6e6e73;
+            --border-color: #d2d2d7;
+            --primary-color: #007aff;
+            --primary-color-hover: #0071e3;
+            --danger-color: #d73a49;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color-primary);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--body-bg);
+            border: 1px solid #e1e1e1;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-color-secondary);
+            margin-bottom: 2.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 1rem;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+            outline: none;
+        }
+
+        button#generateBtn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        button#generateBtn:hover {
+            background-color: var(--primary-color-hover);
+        }
+
+        button#generateBtn:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid #fff;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-wrapper {
+            margin-top: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0.5rem 0.75rem;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        button#copyBtn {
+            background: none;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            color: var(--text-color-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem; 
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        button#copyBtn:hover {
+            background-color: #e0e0e0;
+        }
+        button#copyBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .copy-icon {
+            width: 1em;
+            height: 1em;
+            stroke-width: 2;
+            vertical-align: middle;
+        }
+
+        pre#result {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-color-primary);
+            white-space: pre; /* Use pre for better tree structure alignment */
+            padding: 1.5rem;
+            margin: 0;
+            max-height: 50vh;
+            overflow-y: auto;
+            line-height: 1.6;
+            background-color: #fafafa;
+        }
+        pre#result.error {
+            color: var(--danger-color);
+            font-family: var(--font-sans);
+            white-space: normal;
+        }
+
+        /* Custom scrollbar for a cleaner look */
+        pre#result::-webkit-scrollbar { width: 12px; }
+        pre#result::-webkit-scrollbar-track { background: #f1f1f1; }
+        pre#result::-webkit-scrollbar-thumb { background: #ccc; border-radius: 6px; border: 3px solid #f1f1f1; }
+        pre#result::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <h1>项目目录树</h1>
+        <p class="subtitle">输入一个公开的 GitHub 仓库链接，即刻生成优雅的目录结构。</p>
+        
+        <div class="form-group">
+            <div class="input-wrapper">
+                <input type="text" id="repoUrl" placeholder="例如: https://github.com/facebook/react" value="https://github.com/Atlas-azad/QHGPT-ja">
+                <button id="generateBtn">
+                    <span id="btn-text">生成</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="result-wrapper">
+            <div class="result-header">
+                <button id="copyBtn" title="复制到剪贴板" disabled>
+                    <svg class="copy-icon" id="copy-icon-clipboard" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <svg class="copy-icon" id="copy-icon-check" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span id="copy-text">复制</span>
+                </button>
+            </div>
+            <pre id="result">在这里显示生成的目录树...</pre>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const repoUrlInput = document.getElementById('repoUrl');
+            const generateBtn = document.getElementById('generateBtn');
+            const resultDiv = document.getElementById('result');
+            const btnText = document.getElementById('btn-text');
+            
+            const copyBtn = document.getElementById('copyBtn');
+            const copyText = document.getElementById('copy-text');
+            const iconClipboard = document.getElementById('copy-icon-clipboard');
+            const iconCheck = document.getElementById('copy-icon-check');
+            let hasResultForCopy = false;
+
+            generateBtn.addEventListener('click', handleGeneration);
+            repoUrlInput.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter') handleGeneration();
+            });
+            copyBtn.addEventListener('click', handleCopy);
+
+            async function handleGeneration() {
+                const url = repoUrlInput.value.trim();
+                if (!url) {
+                    showError("请输入 GitHub 仓库链接。");
+                    return;
+                }
+
+                const repoInfo = parseGitHubUrl(url);
+                if (!repoInfo) {
+                    showError("无效的 GitHub 仓库链接。请确保格式正确，如 https://github.com/owner/repo");
+                    return;
+                }
+
+                setLoading(true);
+                copyBtn.disabled = true;
+                hasResultForCopy = false;
+
+                try {
+                    const treeData = await fetchTreeData(repoInfo.owner, repoInfo.repo, repoInfo.branch);
+                    const treeString = buildTreeString(repoInfo.repo, treeData);
+                    showSuccess(treeString);
+                    if (treeData && treeData.length > 0) {
+                        copyBtn.disabled = false;
+                        hasResultForCopy = true;
+                    }
+                } catch (error) {
+                    showError(error.message);
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            function parseGitHubUrl(url) {
+                const regex = /https?:\/\/github\.com\/([^\/]+)\/([^\/\s]+)(?:\/tree\/([^\/\s]+))?/;
+                const match = url.match(regex);
+                if (match) {
+                    return {
+                        owner: match[1],
+                        repo: match[2].replace('.git', ''),
+                        branch: match[3] || 'main'
+                    };
+                }
+                return null;
+            }
+
+            async function fetchTreeData(owner, repo, branch) {
+                let apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+                let response = await fetch(apiUrl);
+                
+                if (response.status === 404) {
+                    console.log(`Branch '${branch}' not found, trying 'master'...`);
+                    apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`;
+                    response = await fetch(apiUrl);
+                }
+
+                if (!response.ok) {
+                    if (response.status === 404) throw new Error(`仓库或分支未找到。请检查链接是否正确，以及仓库是否为公开。`);
+                    if (response.status === 403) throw new Error(`API 访问频率受限。请稍后再试。`);
+                    throw new Error(`获取数据失败，状态码: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (data.truncated) {
+                    alert("提醒：由于文件数量过多，GitHub API 返回了被截断的列表，目录树可能不完整。");
+                }
+                return data.tree;
+            }
+
+            function buildTreeString(repoName, tree) {
+                if (!tree || tree.length === 0) return "这个仓库似乎是空的。";
+
+                const root = {};
+                tree.forEach(item => {
+                    let pathParts = item.path.split('/');
+                    let currentNode = root;
+                    for (let i = 0; i < pathParts.length; i++) {
+                        let part = pathParts[i];
+                        if (!currentNode[part]) {
+                            currentNode[part] = (i === pathParts.length - 1 && item.type === 'blob') ? null : {};
+                        }
+                        currentNode = currentNode[part];
+                    }
+                });
+
+                let treeString = `${repoName}/\n`;
+                const generateLines = (node, prefix = '') => {
+                    const entries = Object.keys(node);
+                    entries.forEach((key, index) => {
+                        const isLast = index === entries.length - 1;
+                        const connector = isLast ? '└── ' : '├── ';
+                        treeString += `${prefix}${connector}${key}\n`;
+                        const childNode = node[key];
+                        if (childNode !== null) { // It's a directory
+                            const newPrefix = prefix + (isLast ? '    ' : '│   ');
+                            generateLines(childNode, newPrefix);
+                        }
+                    });
+                };
+                
+                generateLines(root);
+                return treeString.trim();
+            }
+
+            function handleCopy() {
+                if (!hasResultForCopy) return;
+
+                navigator.clipboard.writeText(resultDiv.innerText).then(() => {
+                    copyText.textContent = '已复制!';
+                    iconClipboard.style.display = 'none';
+                    iconCheck.style.display = 'inline-block';
+                    
+                    setTimeout(() => {
+                        copyText.textContent = '复制';
+                        iconClipboard.style.display = 'inline-block';
+                        iconCheck.style.display = 'none';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('复制失败，您的浏览器可能不支持或未授予权限。请手动复制。');
+                });
+            }
+
+            function setLoading(isLoading) {
+                generateBtn.disabled = isLoading;
+                if (isLoading) {
+                    btnText.textContent = '';
+                    const spinner = document.createElement('span');
+                    spinner.className = 'spinner';
+                    generateBtn.prepend(spinner);
+                } else {
+                    btnText.textContent = '生成';
+                    const spinner = generateBtn.querySelector('.spinner');
+                    if(spinner) spinner.remove();
+                }
+            }
+
+            function showError(message) {
+                resultDiv.textContent = `❌ 错误：${message}`;
+                resultDiv.className = 'error';
+            }
+
+            function showSuccess(content) {
+                resultDiv.textContent = content;
+                resultDiv.className = '';
+            }
+        });
+    </script>
+
+</body>
+</html>
