@@ -12,9 +12,6 @@
 </p>
 
 
-<p align="center">
-  <a href="#-features">Features</a> · <a href="#-how-to-use">How to Use</a> · <a href="#-contributing">Contributing</a>
-</p>
 
 
 ---
