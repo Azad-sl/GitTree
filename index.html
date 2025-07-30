@@ -69,79 +69,292 @@
 }
 footer{text-align:center;margin-top:3rem;padding-bottom:1rem;color:var(--text-secondary);font-size:.875rem;transition:color .3s ease}footer a{color:var(--text-primary);text-decoration:none;font-weight:500;transition:color .2s;display:inline-flex;align-items:center;gap:.3rem}footer a:hover{color:var(--primary-color);text-decoration:underline}footer .github-icon{width:1em;height:1em;fill:currentColor}footer p{margin:.5rem 0 0}
         @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-                justify-content: flex-start; 
-            }
-            .container {
-                padding: 1.5rem 1rem;
-                border: none; 
-                border-radius: 0;
-                box-shadow: none;
-                background-color: var(--bg-color); 
-            }
-            h1 {
-                font-size: 1.75rem;
-            }
-            .subtitle {
-                font-size: 0.95rem;
-                margin-bottom: 2rem;
-            }
-            .input-wrapper {
-                flex-direction: column;
-            }
-            button#generateBtn {
-                padding: 1rem; 
-            }
-            .advanced-options-grid {
-                grid-template-columns: 1fr; 
-                gap: 0.5rem;
-            }
-            .advanced-options-grid label[for="depthInput"] {
-                 margin-top: 0.5rem;
-            }
-            #theme-toggle {
-                top: 1rem;
-                right: 1rem;
-            }
-            .result-header {
-                flex-direction: column; 
-                align-items: stretch; 
-                gap: 0.75rem;
-            }
-            .header-group {
-               justify-content: space-around;
-            }
-            .export-tools button span {
-                display: none; 
-            }
-            .export-tools button {
-                padding: 0.5rem; 
-            }
-            footer {
-                margin-top: 2rem;
-            }
+            body { padding: 1rem; justify-content: flex-start; }
+            .container { padding: 1.5rem 1rem; border: none; border-radius: 0; box-shadow: none; background-color: var(--bg-color); }
+            h1 { font-size: 1.75rem; }
+            .subtitle { font-size: 0.95rem; margin-bottom: 2rem; }
+            .input-wrapper { flex-direction: column; }
+            button#generateBtn { padding: 1rem; }
+            .advanced-options-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+            .advanced-options-grid label[for="depthInput"] { margin-top: 0.5rem; }
+            #theme-toggle { top: 1rem; right: 1rem; }
+            .result-header { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+            .header-group { justify-content: space-around; }
+            .export-tools button span { display: none; }
+            .export-tools button { padding: 0.5rem; }
+            footer { margin-top: 2rem; }
         }
     </style>
 </head>
 <body>
     <main class="container">
-        <button id="theme-toggle" title="切换亮/暗色模式"><svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg id="theme-icon-moon" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><h1>GitHub 项目目录树生成</h1><p class="subtitle">输入一个公开的 GitHub 仓库链接，优雅地生成、过滤与分享。</p><div class="input-wrapper"><input type="text" id="repoUrl" placeholder="例如: https://github.com/Azad-sl/GitTree"><button id="generateBtn"><span id="btn-text">生成</span></button></div><details class="advanced-options"><summary>高级选项</summary><div class="advanced-options-grid"><label for="excludeInput">排除项 (逗号分隔, 支持 `*`):</label><label for="depthInput">最大深度:</label><input type="text" id="excludeInput" placeholder="node_modules, dist, *.log"><input type="number" id="depthInput" min="1" placeholder="∞"></div></details><div class="result-wrapper"><div class="result-header"><div class="header-group view-modes"><button id="view-all" class="active" title="完整视图"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M14 9h7m-7 6h7M4 9h1m-1 6h1"/></svg> <span>All</span></button><button id="view-folders" title="仅文件夹"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> <span>Folders</span></button></div><div class="header-group export-tools"><button id="copyMdBtn" title="复制为 Markdown" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg> <span id="copyMdText">Markdown</span></button><button id="exportBtn" title="导出为图片" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span id="exportText">导出</span></button><button id="copyBtn" title="复制到剪贴板" disabled><svg class="copy-icon" id="copy-icon-clipboard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><svg class="copy-icon" id="copy-icon-check" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg> <span id="copy-text">复制</span></button></div></div><pre id="result">在这里显示生成的目录树...</pre></div>
+        <button id="theme-toggle" title="切换亮/暗色模式"><svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg id="theme-icon-moon" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><h1>GitHub 项目目录树生成</h1><p class="subtitle">输入一个公开的 GitHub 仓库链接，优雅地生成、过滤与分享。</p><div class="input-wrapper"><input type="text" id="repoUrl" placeholder="例如: https://github.com/Azad-sl/GitTree"><button id="generateBtn"><span id="btn-text">生成</span></button></div><details class="advanced-options"><summary>高级选项</summary><div class="advanced-options-grid"><label for="excludeInput">排除项 (逗号分隔, 支持 `*`):</label><label for="depthInput">最大深度:</label><input type="text" id="excludeInput" placeholder="node_modules, dist, *.log"><input type="number" id="depthInput" min="1" placeholder="∞"></div></details><div class="result-wrapper"><div class="result-header"><div class="header-group view-modes"><button id="view-all" class="active" title="完整视图"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M14 9h7m-7 6h7M4 9h1m-1 6h1"/></svg> <span>All</span></button><button id="view-folders" title="仅文件夹"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> <span>Folders</span></button></div><div class="header-group export-tools">
+            <button id="downloadBatBtn" title="生成 .bat 脚本创建目录" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg> <span id="downloadBatText">.bat</span></button>
+            <button id="copyMdBtn" title="复制为 Markdown" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg> <span id="copyMdText">Markdown</span></button><button id="exportBtn" title="导出为图片" disabled><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span id="exportText">导出</span></button><button id="copyBtn" title="复制到剪贴板" disabled><svg class="copy-icon" id="copy-icon-clipboard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><svg class="copy-icon" id="copy-icon-check" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg> <span id="copy-text">复制</span></button></div></div><pre id="result">在这里显示生成的目录树...</pre></div>
     </main>
     <footer>
-        <p>
-            Open-sourced on 
-            <a href="https://github.com/Azad-sl/GitTree" target="_blank" rel="noopener noreferrer">
-                <svg class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Azad-sl / GitTree
-            </a>
-        </p>
+        <p>Open-sourced on <a href="https://github.com/Azad-sl/GitTree" target="_blank" rel="noopener noreferrer"><svg class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg> Azad-sl / GitTree</a></p>
     </footer>
 
     <div id="image-card-container"><div class="macos-window"><div class="title-bar"><div class="traffic-lights"><div class="light red"></div><div class="light yellow"></div><div class="light green"></div></div><div class="title-text"></div></div><pre class="card-content"></pre></div></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => { const exportBtn = document.getElementById('exportBtn'); const exportText = document.getElementById('exportText'); let currentRepoInfo = null; exportBtn.addEventListener('click', async () => { if (!hasResultForCopy) return; exportText.textContent = '生成中...'; exportBtn.disabled = true; const cardContainer = document.getElementById('image-card-container'); const cardTitle = cardContainer.querySelector('.title-text'); const cardContent = cardContainer.querySelector('.card-content'); try { cardContent.style.maxHeight = 'none'; cardTitle.textContent = `${currentRepoInfo.owner}/${currentRepoInfo.repo}`; cardContent.textContent = resultDiv.textContent; const canvas = await html2canvas(cardContainer, { useCORS: true, backgroundColor: null }); const link = document.createElement('a'); link.download = `${currentRepoInfo.repo}-tree.png`; link.href = canvas.toDataURL('image/png'); link.click(); } catch (error) { console.error('导出图片失败:', error); alert('导出图片失败，详情请查看控制台。'); } finally { cardContent.style.maxHeight = ''; exportText.textContent = '导出'; exportBtn.disabled = false; } }); const resultDiv = document.getElementById('result'); const repoUrlInput = document.getElementById('repoUrl'); const generateBtn = document.getElementById('generateBtn'); const copyBtn = document.getElementById('copyBtn'); const copyMdBtn = document.getElementById('copyMdBtn'); const copyMdText = document.getElementById('copyMdText'); let hasResultForCopy = false; function setShareButtonsState(enabled) { hasResultForCopy = enabled;[copyBtn, exportBtn, copyMdBtn].forEach(btn => btn.disabled = !enabled); } async function handleGenerationWrapper() { setShareButtonsState(false); const url = repoUrlInput.value.trim(); if (!url) { showError("请输入 GitHub 仓库链接。"); return; } currentRepoInfo = parseGitHubUrl(url); if (!currentRepoInfo) { showError("无效的 GitHub 仓库链接。请确保格式正确。"); return; } setLoading(true); try { const rawTree = await fetchTreeData(currentRepoInfo.owner, currentRepoInfo.repo, currentRepoInfo.branch); const excludePatterns = excludeInput.value.split(',').map(p => p.trim()).filter(Boolean); const maxDepth = parseInt(depthInput.value, 10) || Infinity; const filteredTree = filterTree(rawTree, excludePatterns, currentViewMode); const treeString = buildTreeString(currentRepoInfo.repo, filteredTree, maxDepth); showSuccess(treeString); if (filteredTree.length > 0) { setShareButtonsState(true); } } catch (error) { showError(error.message); } finally { setLoading(false); } } copyMdBtn.addEventListener('click', () => { if (!hasResultForCopy) return; const markdownString = "```\n" + resultDiv.innerText + "\n```"; navigator.clipboard.writeText(markdownString).then(() => { const originalText = copyMdText.textContent; copyMdText.textContent = '已复制!'; setTimeout(() => { copyMdText.textContent = originalText; }, 2000); }).catch(err => { console.error('复制 Markdown 失败:', err); alert('复制 Markdown 失败。'); }); }); const btnText=document.getElementById("btn-text"),copyText=document.getElementById("copy-text"),iconClipboard=document.getElementById("copy-icon-clipboard"),iconCheck=document.getElementById("copy-icon-check"),excludeInput=document.getElementById("excludeInput"),depthInput=document.getElementById("depthInput"),viewAllBtn=document.getElementById("view-all"),viewFoldersBtn=document.getElementById("view-folders"),themeToggle=document.getElementById("theme-toggle"),themeIconSun=document.getElementById("theme-icon-sun"),themeIconMoon=document.getElementById("theme-icon-moon"),htmlEl=document.documentElement;let currentViewMode="all";generateBtn.addEventListener("click",handleGenerationWrapper),repoUrlInput.addEventListener("keydown",e=>{"Enter"===e.key&&handleGenerationWrapper()}),copyBtn.addEventListener("click",handleCopy),viewAllBtn.addEventListener("click",()=>setViewMode("all")),viewFoldersBtn.addEventListener("click",()=>setViewMode("folders")),themeToggle.addEventListener("click",toggleTheme);function applyTheme(e){htmlEl.setAttribute("data-theme",e),"dark"===e?(themeIconSun.style.display="none",themeIconMoon.style.display="block"):(themeIconSun.style.display="block",themeIconMoon.style.display="none")}function toggleTheme(){const e="dark"===htmlEl.getAttribute("data-theme")?"light":"dark";applyTheme(e),localStorage.setItem("theme",e)}applyTheme(localStorage.getItem("theme")||"light");function filterTree(e,t,o){return e.filter(e=>!(e=>{const o=e.split("/");return t.some(t=>t.startsWith("*.")?e.endsWith(t.substring(1)):o.includes(t))})(e.path)&&("folders"!==o||"tree"===e.type))}function buildTreeString(e,t,o){if(!t||0===t.length)return"没有可显示的项目，请检查您的过滤条件。";const n={};t.forEach(e=>{let t=e.path.split("/"),l=n;for(let r=0;r<t.length;r++){let c=t[r];l[c]||(l[c]=r===t.length-1&&"blob"===e.type?null:{}),l=l[c]}});let l=`${e}/\n`,r=(e,t="",n=1)=>{const c=Object.keys(e);c.forEach((s,a)=>{const i=a===c.length-1,d=i?"└── ":"├── ";l+=`${t}${d}${s}\n`;const p=e[s];null!==p&&n<o&&r(p,t+(i?"    ":"│   "),n+1)})};return r(n),l.trim()}function parseGitHubUrl(e){const t=/https?:\/\/github\.com\/([^\/]+)\/([^\/\s]+)/.exec(e);return t?{owner:t[1],repo:t[2].replace(".git",""),branch:"main"}:null}async function fetchTreeData(e,t,o){let n=await fetch(`https://api.github.com/repos/${e}/${t}/git/trees/${o}?recursive=1`);if(404===n.status&&(console.log("try master"),n=await fetch(`https://api.github.com/repos/${e}/${t}/git/trees/master?recursive=1`)),!n.ok){if(404===n.status)throw new Error("仓库或分支未找到");if(403===n.status)throw new Error("API访问频率受限");throw new Error(`获取���败:${n.status}`)}const l=await n.json();return l.truncated&&alert("提醒:文件列表过大,已被GitHub API截断"),l.tree}function handleCopy(){hasResultForCopy&&navigator.clipboard.writeText(resultDiv.innerText).then(()=>{copyText.textContent="已复制!",iconClipboard.style.display="none",iconCheck.style.display="inline-block",setTimeout(()=>{copyText.textContent="复制",iconClipboard.style.display="inline-block",iconCheck.style.display="none"},2e3)}).catch(e=>{console.error("复制失败:",e),alert("复制失败,您的浏览器可能不支持或未授予权限。")})}function setLoading(e){generateBtn.disabled=e,e?(btnText.textContent="",function(){const e=document.createElement("span");e.className="spinner",generateBtn.prepend(e)}()):(btnText.textContent="生成",function(){const e=generateBtn.querySelector(".spinner");e&&e.remove()}())}function showError(e){resultDiv.textContent=`❌ 错误：${e}`,resultDiv.className="error"}function showSuccess(e){resultDiv.textContent=e,resultDiv.className=""}function setViewMode(e){currentViewMode=e,viewAllBtn.classList.toggle("active","all"===e),viewFoldersBtn.classList.toggle("active","folders"===e),handleGenerationWrapper()} });
+        document.addEventListener('DOMContentLoaded', () => { 
+            const resultDiv = document.getElementById('result');
+            const repoUrlInput = document.getElementById('repoUrl');
+            const generateBtn = document.getElementById('generateBtn');
+            const excludeInput = document.getElementById('excludeInput');
+            const depthInput = document.getElementById('depthInput');
+            
+            const copyBtn = document.getElementById('copyBtn');
+            const copyMdBtn = document.getElementById('copyMdBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const downloadBatBtn = document.getElementById('downloadBatBtn');
+
+            const viewAllBtn = document.getElementById('view-all');
+            const viewFoldersBtn = document.getElementById('view-folders');
+
+            const btnText = document.getElementById('btn-text');
+            const copyText = document.getElementById('copy-text');
+            const copyMdText = document.getElementById('copyMdText');
+            const exportText = document.getElementById('exportText');
+            const iconClipboard = document.getElementById('copy-icon-clipboard');
+            const iconCheck = document.getElementById('copy-icon-check');
+
+            const themeToggle = document.getElementById("theme-toggle");
+            const themeIconSun = document.getElementById("theme-icon-sun");
+            const themeIconMoon = document.getElementById("theme-icon-moon");
+            const htmlEl = document.documentElement;
+            
+            let fullTreeData = [];
+            let currentRepoInfo = null;
+            let hasResultForCopy = false;
+            let currentViewMode = "all";
+
+            function setShareButtonsState(enabled) {
+                hasResultForCopy = enabled;
+                [copyBtn, exportBtn, copyMdBtn, downloadBatBtn].forEach(btn => btn.disabled = !enabled);
+            }
+
+            function renderTree() {
+                if (!currentRepoInfo) return; 
+                const excludePatterns = excludeInput.value.split(',').map(p => p.trim()).filter(Boolean);
+                const maxDepth = parseInt(depthInput.value, 10) || Infinity;
+                
+                const filteredTree = filterTree(fullTreeData, excludePatterns, maxDepth, currentViewMode);
+                const treeString = buildTreeString(currentRepoInfo.repo, filteredTree, maxDepth);
+                
+                showSuccess(treeString);
+
+                if (filteredTree.length > 0) {
+                    setShareButtonsState(true);
+                } else {
+                    setShareButtonsState(false);
+                }
+            }
+            
+            async function handleGenerationWrapper() {
+                setShareButtonsState(false);
+                const url = repoUrlInput.value.trim();
+                if (!url) { showError("请输入 GitHub 仓库链接。"); return; }
+                currentRepoInfo = parseGitHubUrl(url);
+                if (!currentRepoInfo) { showError("无效的 GitHub 仓库链接。请确保格式正确。"); return; }
+                
+                setLoading(true);
+                try {
+                    const rawTree = await fetchTreeData(currentRepoInfo.owner, currentRepoInfo.repo, currentRepoInfo.branch);
+                    fullTreeData = rawTree; 
+                    renderTree(); 
+                } catch (error) {
+                    showError(error.message);
+                    fullTreeData = []; 
+                    currentRepoInfo = null;
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            function setViewMode(mode) {
+                if (currentViewMode === mode) return; 
+                currentViewMode = mode;
+                viewAllBtn.classList.toggle("active", mode === "all");
+                viewFoldersBtn.classList.toggle("active", mode === "folders");
+                
+                if (hasResultForCopy) {
+                    renderTree(); 
+                }
+            }
+            
+            exportBtn.addEventListener('click', async () => {
+                if (!hasResultForCopy) return;
+                exportText.textContent = '生成中...';
+                exportBtn.disabled = true;
+
+                const cardContainer = document.getElementById('image-card-container');
+                const cardTitle = cardContainer.querySelector('.title-text');
+                const cardContent = cardContainer.querySelector('.card-content');
+                
+                try {
+                    cardContent.style.maxHeight = 'none';
+                    cardTitle.textContent = `${currentRepoInfo.owner}/${currentRepoInfo.repo}`;
+                    cardContent.textContent = resultDiv.textContent;
+                    const canvas = await html2canvas(cardContainer, { useCORS: true, backgroundColor: null });
+                    const link = document.createElement('a');
+                    link.download = `${currentRepoInfo.repo}-tree.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (error) {
+                    console.error('导出图片失败:', error);
+                    alert('导出图片失败，详情请查看控制台。');
+                } finally {
+                    cardContent.style.maxHeight = '';
+                    exportText.textContent = '导出';
+                    exportBtn.disabled = false;
+                }
+            });
+            
+            copyMdBtn.addEventListener('click', () => {
+                if (!hasResultForCopy) return;
+                const markdownString = "```\n" + resultDiv.innerText + "\n```";
+                navigator.clipboard.writeText(markdownString).then(() => {
+                    const originalText = copyMdText.textContent;
+                    copyMdText.textContent = '已复制!';
+                    setTimeout(() => { copyMdText.textContent = originalText; }, 2000);
+                }).catch(err => {
+                    console.error('复制 Markdown 失败:', err);
+                    alert('复制 Markdown 失败。');
+                });
+            });
+
+            function generateBatContent() {
+                if (!currentRepoInfo || fullTreeData.length === 0) return '';
+                const rootDir = currentRepoInfo.repo;
+                const commands = [
+                    '@echo off', 'chcp 65001 > nul', 'echo Creating directory structure for ' + rootDir + '...', `if not exist "${rootDir}" ( md "${rootDir}" )`, `cd "${rootDir}"`, ''
+                ];
+                
+                const excludePatterns = excludeInput.value.split(',').map(p => p.trim()).filter(Boolean);
+                const maxDepth = parseInt(depthInput.value, 10) || Infinity;
+                
+                const itemsToCreate = filterTree(fullTreeData, excludePatterns, maxDepth, currentViewMode);
+                itemsToCreate.sort((a,b) => a.path.localeCompare(b.path));
+                
+                for (const item of itemsToCreate) {
+                    const windowsPath = item.path.replace(/\//g, '\\');
+                    if (item.type === 'tree') {
+                        commands.push(`if not exist "${windowsPath}" ( md "${windowsPath}" )`);
+                    } else if (item.type === 'blob') {
+                        commands.push(`if not exist "${windowsPath}" ( type NUL > "${windowsPath}" )`);
+                    }
+                }
+                commands.push('', 'echo.', 'echo Directory structure for "' + rootDir + '" created successfully!', 'pause');
+                return commands.join('\r\n');
+            }
+
+            downloadBatBtn.addEventListener('click', () => {
+                if (!hasResultForCopy || !currentRepoInfo) return;
+                const batContent = generateBatContent();
+                if (!batContent) { alert('没有可创建的内容。'); return; }
+                const blob = new Blob([batContent], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `create_${currentRepoInfo.repo}_structure.bat`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            });
+            
+            function filterTree(tree, excludePatterns, maxDepth, viewMode) {
+                return tree.filter(item => {
+                    const depth = item.path.split('/').length;
+                    if (depth > maxDepth) return false;
+
+                    const isExcluded = excludePatterns.some(pattern => {
+                        if (pattern.startsWith('*.')) {
+                            return item.path.endsWith(pattern.substring(1));
+                        }
+                        const pathSegments = item.path.split('/');
+                        return pathSegments.includes(pattern);
+                    });
+
+                    if (isExcluded) return false;
+                    
+                    if (viewMode === 'folders' && item.type !== 'tree') return false;
+
+                    return true;
+                });
+            }
+
+            function buildTreeString(repoName, tree, maxDepth) {
+                if (!tree || tree.length === 0) return "没有可显示的项目，请检查您的过滤条件。";
+                const root = {};
+                tree.forEach(item => {
+                    let path = item.path.split('/');
+                    let currentLevel = root;
+                    for (let i = 0; i < path.length; i++) {
+                        let part = path[i];
+                        if (!currentLevel[part]) {
+                            currentLevel[part] = (i === path.length - 1 && item.type === 'blob') ? null : {};
+                        }
+                        currentLevel = currentLevel[part];
+                    }
+                });
+
+                let treeString = `${repoName}/\n`;
+                const build = (node, prefix = "", level = 1) => {
+                    const entries = Object.keys(node).sort((a, b) => {
+                        const aIsDir = node[a] !== null; const bIsDir = node[b] !== null;
+                        if (aIsDir !== bIsDir) return aIsDir ? -1 : 1;
+                        return a.localeCompare(b);
+                    });
+                    entries.forEach((entry, index) => {
+                        const isLast = index === entries.length - 1;
+                        const connector = isLast ? "└── " : "├── ";
+                        treeString += `${prefix}${connector}${entry}\n`;
+                        const child = node[entry];
+                        if (child !== null && level < maxDepth) {
+                            const newPrefix = prefix + (isLast ? "    " : "│   ");
+                            build(child, newPrefix, level + 1);
+                        }
+                    });
+                };
+                
+                build(root);
+                return treeString.trim();
+            }
+
+            function handleCopy() {
+                if (!hasResultForCopy) return;
+                navigator.clipboard.writeText(resultDiv.innerText).then(() => {
+                    copyText.textContent = "已复制!";
+                    iconClipboard.style.display = "none";
+                    iconCheck.style.display = "inline-block";
+                    setTimeout(() => {
+                        copyText.textContent = "复制";
+                        iconClipboard.style.display = "inline-block";
+                        iconCheck.style.display = "none";
+                    }, 2000);
+                }).catch(err => { console.error("复制失败:", err); alert("复制失败,您的浏览器可能不支持或未授予权限。"); });
+            }
+            
+            generateBtn.addEventListener("click", handleGenerationWrapper);
+            repoUrlInput.addEventListener("keydown", e => { if (e.key === "Enter") handleGenerationWrapper(); });
+            copyBtn.addEventListener("click", handleCopy);
+            viewAllBtn.addEventListener("click", () => setViewMode("all"));
+            viewFoldersBtn.addEventListener("click", () => setViewMode("folders"));
+            
+            // --- Unchanged Helper Functions ---
+            function parseGitHubUrl(url) { const match = /https?:\/\/github\.com\/([^\/]+)\/([^\/\s]+)/.exec(url); return match ? { owner: match[1], repo: match[2].replace(".git", ""), branch: "main" } : null; }
+            async function fetchTreeData(owner, repo, branch) { let response = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`); if (response.status === 404) { console.log("Branch 'main' not found, trying 'master'"); response = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`); } if (!response.ok) { if (response.status === 404) throw new Error("Repository or branch not found. Please check the URL."); if (response.status === 403) throw new Error("API rate limit exceeded. Please wait a moment and try again."); throw new Error(`Failed to fetch tree data: ${response.statusText}`); } const data = await response.json(); if (data.truncated) { alert("Warning: The file list is too large and has been truncated by the GitHub API. The generated tree may be incomplete."); } return data.tree; }
+            function setLoading(isLoading) { generateBtn.disabled = isLoading; if (isLoading) { btnText.textContent = ""; const spinner = document.createElement("span"); spinner.className = "spinner"; generateBtn.prepend(spinner); } else { btnText.textContent = "生成"; const spinner = generateBtn.querySelector(".spinner"); if (spinner) spinner.remove(); } }
+            function showError(message) { resultDiv.textContent = `❌ 错误：${message}`; resultDiv.className = "error"; }
+            function showSuccess(text) { resultDiv.textContent = text; resultDiv.className = ""; }
+            function applyTheme(theme) { htmlEl.setAttribute("data-theme", theme); themeIconSun.style.display = theme === 'dark' ? "none" : "block"; themeIconMoon.style.display = theme === 'dark' ? "block" : "none"; }
+            function toggleTheme() { const newTheme = htmlEl.getAttribute("data-theme") === "dark" ? "light" : "dark"; applyTheme(newTheme); localStorage.setItem("theme", newTheme); }
+            applyTheme(localStorage.getItem("theme") || "light");
+        });
     </script>
 </body>
 </html>
