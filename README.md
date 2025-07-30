@@ -1,8 +1,6 @@
 # GitTree 🌳
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/33390393/226155981-d9f2e46f-c689-4a0b-8d48-6a4a229a4ae2.gif" alt="GitTree Demo GIF" width="800"/>
-</p>
+
 
 
 <p align="center">
