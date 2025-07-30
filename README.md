@@ -27,7 +27,7 @@
 
 ## 🇬🇧 English Version
 
-An elegant web tool that generates a clean, beautiful directory tree for any public GitHub repository. Perfect for documentation, project overviews, and sharing.
+An elegant and efficient web tool that generates clear, beautiful directory trees for any public GitHub repository. Designed to help developers quickly visualize, share, and archive the structure of any public repository. Ideal for writing documentation, project overviews, and code sharing. The tool runs entirely on the frontend, with core data fetched by calling GitHub's official [REST API (Git/Trees API)](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree) , ensuring real-time and accurate data.
 
 ### ✨ Features
 
@@ -39,18 +39,13 @@ An elegant web tool that generates a clean, beautiful directory tree for any pub
   - Export as a stylish image.
   - **🆕 Generate `.bat` script**: Download a batch file to instantly create the entire directory structure (including empty files) on your local Windows machine.
 
-### 🚀 How to Use
 
-1.  **Go to** [**GitTree**](https://azad-sl.github.io/GitTree/).
-2.  **Paste** a public GitHub repository URL.
-3.  **Click** "Generate".
-4.  **Customize & Export** using the options above the result area.
 
 ---
 
 ## 🇨🇳 中文版
 
-一款优雅、高效的网页工具，能为任何公开的 GitHub 仓库生成清晰、美观的目录树。非常适合用于编写文档、项目概览和代码分享。
+一款优雅、高效的网页工具，能为任何公开的 GitHub 仓库生成清晰、美观的目录树。旨在帮助开发者快速可视化、分享和归档任何公共仓库的结构。 适用于编写文档、项目概览和代码分享。该工具完全在前端运行，核心数据通过调用 GitHub 官方的 [REST API (Git/Trees API)](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree) 获取，确保了数据的实时与准确性。
 
 ### ✨ 核心特性
 
@@ -59,15 +54,9 @@ An elegant web tool that generates a clean, beautiful directory tree for any pub
 - **🚀 多种导出方式**:
   - 复制为纯文本。
   - 复制为 Markdown 代码块。
-  - 导出为精美图片。
+  - 导出为带有macOS风格窗口的精美图片。
   - **🆕 生成 `.bat` 脚本**: 下载批处理文件，双击即可在您的 Windows 电脑上瞬间创建与仓库完全一致的目录结构（包含空文件）。
 
-### 🚀 如何使用
-
-1.  **访问** [**GitTree**](https://azad-sl.github.io/GitTree/) 网站。
-2.  **粘贴** 一个公开的 GitHub 仓库链接。
-3.  **点击** “生成”按钮。
-4.  在结果区上方**自定义**过滤条件或选择导出方式。
 
 ---
 
