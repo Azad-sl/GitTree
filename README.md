@@ -16,13 +16,13 @@
 
 ---
 
-## 🌎 README in Languages
+## 🌎 README 
 
 [**English**](#-english-version) | [**中文**](#-中文版)
 
 ---
 
-## 🇬🇧 English Version
+## 🇬🇧 English
 
 An elegant and efficient web tool that generates clear, beautiful directory trees for any public GitHub repository. Designed to help developers quickly visualize, share, and archive the structure of any public repository. Ideal for writing documentation, project overviews, and code sharing. The tool runs entirely on the frontend, with core data fetched by calling GitHub's official [REST API (Git/Trees API)](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree) , ensuring real-time and accurate data.
 
@@ -40,7 +40,7 @@ An elegant and efficient web tool that generates clear, beautiful directory tree
 
 ---
 
-## 🇨🇳 中文版
+## 🇨🇳 中文
 
 一款优雅、高效的网页工具，能为任何公开的 GitHub 仓库生成清晰、美观的目录树。旨在帮助开发者快速可视化、分享和归档任何公共仓库的结构。 适用于编写文档、项目概览和代码分享。该工具完全在前端运行，核心数据通过调用 GitHub 官方的 [REST API (Git/Trees API)](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree) 获取，确保了数据的实时与准确性。
 
