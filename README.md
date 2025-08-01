@@ -7,8 +7,9 @@
   <strong>An elegant and efficient GitHub repository tree generator.</strong>
   <br />
   <a href="https://azad-sl.github.io/GitTree/"><strong>Go to Website »</strong></a>
+<br />
+  <a href="https://greasyfork.org/zh-CN/scripts/544254-github-repo-tree-generator"><strong>Install Tampermonkey script/安装油猴脚本 »</strong></a>
 </p>
-
 ---
 
 ## 🌎 README 
