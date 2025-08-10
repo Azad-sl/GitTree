@@ -4,15 +4,15 @@
 <table align="center">
   <tr>
     <td align="center">
-        <img src="https://img.aihub.ren/i/2025/08/10/ls6j1s.png" width="260px" alt="项目核心特性或Logo">
+        <img src="https://img.aihub.ren/i/2025/08/10/ls6j1s.png" width="260px" alt="界面">
       <br><sub><b>界面</b></sub>
     </td>
     <td align="center">
-        <img src="https://img.aihub.ren/i/2025/08/01/k8h5tw.png" width="260px" alt="功能或界面截图一">
+        <img src="https://img.aihub.ren/i/2025/08/01/k8h5tw.png" width="260px" alt="按钮">
       <br><sub><b>按钮</b></sub>
     </td>
     <td align="center">
-        <img src="https://img.aihub.ren/i/2025/08/10/nk1sat.png" width="260px" alt="功能或界面截图二">
+        <img src="https://img.aihub.ren/i/2025/08/10/nk1sat.png" width="260px" alt="生成卡片">
       <br><sub><b>生成卡片</b></sub>
     </td>
   </tr>
@@ -77,19 +77,10 @@ An elegant and efficient web tool that generates clear, beautiful directory tree
 
 ---
 
-## 🤝 Contributing
+## ❤️ Support | 支持一下
 
-Contributions are welcome! Please feel free to submit a pull request.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-![image_1208](https://img.aihub.ren/i/2025/08/10/ls6j1s.png)
-![image_1207](https://img.aihub.ren/i/2025/08/01/k8h5tw.png)
+If you like this project, please give it a ⭐️ **Star**! Or, you can buy me a coffee.
+如果项目对你有帮助，欢迎点个 ⭐️ **Star**！也可以请我喝杯咖啡。
+<p align="center">  
+<img src="https://github.com/user-attachments/assets/e9eecbdd-f266-467e-b615-71b67d8e8f17" alt="Donation" width="400" />
+</p>
