@@ -18,7 +18,6 @@
 (function() {
     'use strict';
     GM_addStyle(`
-        /* 弹窗样式 */
         .gittree-modal {
             position: fixed;
             top: 0;
