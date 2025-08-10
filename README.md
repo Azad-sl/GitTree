@@ -1,3 +1,6 @@
+
+# GitTree 🌳
+
 <table align="center">
   <tr>
     <td align="center">
@@ -18,9 +21,6 @@
 
 
 
-
-
-# GitTree 🌳
 
 <p align="center">
   <strong>An elegant and efficient GitHub repository tree generator.</strong>
