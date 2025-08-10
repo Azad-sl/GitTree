@@ -13,6 +13,7 @@
 
 ---
 
+
 ## 🌎 README 
 
 [**English**](#-english-version) | [**中文**](#-中文版)
@@ -31,7 +32,7 @@ An elegant and efficient web tool that generates clear, beautiful directory tree
 - **Multiple Export Options**:
   - Copy as plain text.
   - Copy as Markdown code block.
-  - Export as a stylish image.
+  - **Export as a stylish directory tree image with macOS style windows and export project sharing cards in various styles.**
   - **🚀 Cross-Platform Script Generation**: One-click download of a script to instantly create the entire directory structure locally.
     - **`.bat` for Windows**: Generates a batch file for Windows users.
     - **`.sh` for macOS/Linux**: Generates a shell script for macOS and Linux users.
@@ -50,7 +51,7 @@ An elegant and efficient web tool that generates clear, beautiful directory tree
 - **🚀 多种导出方式**:
   - 复制为纯文本。
   - 复制为 Markdown 代码块。
-  - 导出为带有macOS风格窗口的精美图片。
+  - **导出为带有macOS风格窗口的精美目录树图片、导出多种风格的项目分享卡片。**
   - **跨平台脚本生成**: 一键下载脚本，瞬间在本地创建与仓库完全一致的目录结构。
     - **`.bat` 脚本 (Windows)**: 为 Windows 用户生成批处理文件。
     - **`.sh` 脚本 (macOS/Linux)**: 为 macOS 和 Linux 用户生成 Shell 脚本。
@@ -70,3 +71,6 @@ Contributions are welcome! Please feel free to submit a pull request.
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+![image_1208](https://img.aihub.ren/i/2025/08/10/ls6j1s.png)
+![image_1207](https://img.aihub.ren/i/2025/08/01/k8h5tw.png)
