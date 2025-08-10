@@ -25,8 +25,8 @@
 <p align="center">
   <strong>An elegant and efficient GitHub repository tree generator.</strong>
   <br /><br />
-  <a href="https://azad-sl.github.io/GitTree/" target="_blank"><strong>Go to Website »</strong></a>
-<br /><br />
+  <a href="https://azad-sl.github.io/GitTree/" target="_blank"><strong>Go to Website 01 »</strong></a>
+<br /><br /><a href="https://gittree.aihub.ren/" target="_blank"><strong>Go to Website 02 »</strong></a>  <br /><br />
   <a href="https://greasyfork.org/zh-CN/scripts/544254-github-repo-tree-generator" target="_blank"><strong>Install Tampermonkey script/安装油猴脚本 »</strong></a>
 </p>
 
